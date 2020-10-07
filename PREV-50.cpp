@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <algorithm>
+#include <cstdio>
 
 using namespace std;
 const int MAX_N = 100001;
