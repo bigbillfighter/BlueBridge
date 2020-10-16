@@ -1,47 +1,40 @@
 #include<cstdio>
 #include<iostream>
 #include<cstdlib>
+#include<algorithm>
 using namespace std;
 
-const int MAX_N=1005;
-char map[MAX_N][MAX_N];
-bool visit[MAX_N][MAX_N];
-int N;
-int ans;
-int X[4] = {-1, 0, 1, 0};
-int Y[4] = {0, 1, 0, -1};
+typedef pair<int, int> P; //first time, second id
+const int MAX_N = 1e5+5;
+P thum[MAX_N]; // 点赞数据 
+bool ht[MAX_N]; //是否热 
+int tms[MAX_N]; //点赞次数 
 
-void dfs(int i, int j){
-	int i, j, k;
-	for(i=0; i<N; i++){
-		for(j=0; j<N; j++){
-			if(map[i][j]=='#'&& !visit[i][j]){
-				for(k=0; k<4; k++){
-					int nx = i+X[k], ny = j+Y[k];
-					if(nx>=0&&nx<N&&ny>=0&&ny<N&&map[nx][ny]='.') {
-						map[i][j] = '.';
-					}
-				}	
-			}
-		}
-	}
+int N, D, K; 
+
+bool cmp(P a1, P a2){
+	return a1.first < a2.first;
 }
 
 void solve() {
-	scanf("%d", &N);
+	scanf("%d %d %d", &N, &D, &K);
 	int i, j;
 	for(i=0; i<N; i++){
-		for(j=0; j<N; j++){
-			scanf(" %c", &map[i][j]);
-		}
+		scanf("%d %d", &thum[i].first, &thum[i].second);
 	}
-	dfs();
+	sort(thum, thum+N, cmp);
+	j=0;
 	for(i=0; i<N; i++){
-		for(j=0; j<N; j++){
-			if(map[i][j] == '#') ans++;
+		while(j<N && thum[j].first-thum[i].first<D){
+			tms[thum[j].second]++;
+			if(tms[thum[j].second] >= K) ht[thum[j].second] = true;	
+			j++;
 		}
+		tms[thum[i].second]--;
 	}
-	printf("%d\n", ans);
+	for(i=0; i<MAX_N; i++){
+		if(ht[i]) printf("%d\n", i);
+	} 
 }
 
 int main() {
